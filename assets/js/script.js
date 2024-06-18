@@ -88,6 +88,57 @@ function displayForecast(data) {
         `;
     }
 }
+// Function to get the user's current location and fetch weather data
+function getCurrentLocationWeather() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            fetchWeatherByCoordinates(lat, lon);
+        }, error => {
+            console.error('Error getting location:', error);
+            displayErrorMessage('Unable to retrieve your location.');
+        });
+    } else {
+        displayErrorMessage('Geolocation is not supported by this browser.');
+    }
+}
+
+// Function to fetch weather data using coordinates
+function fetchWeatherByCoordinates(lat, lon) {
+    const apiUrlCurrent = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
+    const apiUrlForecast = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=imperial`;
+
+    fetch(apiUrlCurrent)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Location not found');
+            }
+            return response.json();
+        })
+        .then(data => {
+            displayCurrentWeather(data);
+        })
+        .catch(error => {
+            console.error('Error fetching current weather data:', error);
+            displayErrorMessage('Unable to retrieve weather data for your location.');
+        });
+
+    fetch(apiUrlForecast)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Location not found');
+            }
+            return response.json();
+        })
+        .then(data => {
+            displayForecast(data);
+        })
+        .catch(error => {
+            console.error('Error fetching forecast weather data:', error);
+            displayErrorMessage('Unable to retrieve weather data for your location.');
+        });
+}
 
 // Function to save a city to the search history in localStorage
 function saveSearchHistory(city) {
@@ -125,3 +176,4 @@ function displayErrorMessage(message) {
 
 // Initialize the search history display on page load
 document.addEventListener('DOMContentLoaded', displaySearchHistory);
+document.addEventListener('DOMContentLoaded', getCurrentLocationWeather);
