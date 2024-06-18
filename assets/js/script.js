@@ -32,11 +32,10 @@ function fetchWeather(city) {
 // Function to display current weather data
 function displayCurrentWeather(data) {
     const currentWeather = document.getElementById('current-weather');
-    const localTime = convertToUserLocalTime(new Date(data.list[0].dt * 1000));
     currentWeather.innerHTML = `
         <div class="weather-details">
             <h3>${data.city.name}</h3>
-            <p>${localTime.toLocaleString()}</p>
+            <p>${new Date(data.list[0].dt_txt).toLocaleDateString()}</p>
             <p><img src="https://openweathermap.org/img/wn/${data.list[0].weather[0].icon}.png" alt="${data.list[0].weather[0].description}"></p>
             <p>Temperature: ${data.list[0].main.temp} °F</p>
             <p>Humidity: ${data.list[0].main.humidity} %</p>
@@ -50,10 +49,9 @@ function displayForecast(data) {
     const forecast = document.getElementById('forecast');
     forecast.innerHTML = '';
     for (let i = 0; i < data.list.length; i += 8) {
-        const localTime = convertToUserLocalTime(new Date(data.list[i].dt * 1000));
         forecast.innerHTML += `
             <div class="forecast-details">
-                <p>${localTime.toLocaleString()}</p>
+                <p>${new Date(data.list[i].dt_txt).toLocaleDateString()}</p>
                 <p><img src="https://openweathermap.org/img/wn/${data.list[i].weather[0].icon}.png" alt="${data.list[i].weather[0].description}"></p>
                 <p>Temperature: ${data.list[i].main.temp} °F</p>
                 <p>Humidity: ${data.list[i].main.humidity} %</p>
@@ -61,13 +59,6 @@ function displayForecast(data) {
             </div>
         `;
     }
-}
-
-// Function to convert UTC time to user's local time
-function convertToUserLocalTime(date) {
-    const userTimeZoneOffset = new Date().getTimezoneOffset() * 60000;
-    const localTime = new Date(date.getTime() - userTimeZoneOffset);
-    return localTime;
 }
 
 // Function to save a city to the search history in localStorage
