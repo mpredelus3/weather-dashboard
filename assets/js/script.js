@@ -11,7 +11,7 @@ document.getElementById('city-form').addEventListener('submit', function(event) 
 
 // Function to fetch weather data for a given city
 function fetchWeather(city) {
-    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric`;
+    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=imperial`;
     fetch(apiUrl)
         .then(response => {
             if (!response.ok) {
@@ -37,9 +37,9 @@ function displayCurrentWeather(data) {
             <h3>${data.city.name}</h3>
             <p>${new Date(data.list[0].dt_txt).toLocaleDateString()}</p>
             <p><img src="https://openweathermap.org/img/wn/${data.list[0].weather[0].icon}.png" alt="${data.list[0].weather[0].description}"></p>
-            <p>Temperature: ${data.list[0].main.temp} °C</p>
+            <p>Temperature: ${data.list[0].main.temp} °F</p>
             <p>Humidity: ${data.list[0].main.humidity} %</p>
-            <p>Wind Speed: ${data.list[0].wind.speed} m/s</p>
+            <p>Wind Speed: ${data.list[0].wind.speed} mph</p>
         </div>
     `;
 }
@@ -53,9 +53,9 @@ function displayForecast(data) {
             <div class="forecast-details">
                 <p>${new Date(data.list[i].dt_txt).toLocaleDateString()}</p>
                 <p><img src="https://openweathermap.org/img/wn/${data.list[i].weather[0].icon}.png" alt="${data.list[i].weather[0].description}"></p>
-                <p>Temperature: ${data.list[i].main.temp} °C</p>
+                <p>Temperature: ${data.list[i].main.temp} °F</p>
                 <p>Humidity: ${data.list[i].main.humidity} %</p>
-                <p>Wind Speed: ${data.list[i].wind.speed} m/s</p>
+                <p>Wind Speed: ${data.list[i].wind.speed} mph</p>
             </div>
         `;
     }
